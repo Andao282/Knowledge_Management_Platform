@@ -1,11 +1,10 @@
 package com.oadna.qlsach_api.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.TypeAlias;
+
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -18,5 +17,16 @@ public class Account {
     @Column(name = "Password", length = 50)
     private String password;
 
-    @Column(name = "Staff")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "StaffID")
+    private Staff staff;
+
+    @Column(name = "Status")
+    private Boolean status;
+
+    @Column(name = "CreationDate")
+    private LocalDate creationDate;
+
+    @Column(name = "Note")
+    private String note;
 }
