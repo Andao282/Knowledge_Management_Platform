@@ -1,5 +1,6 @@
 package com.oadna.qlsach_api.service;
 
+import com.oadna.qlsach_api.entity.Author;
 import com.oadna.qlsach_api.entity.Category;
 import com.oadna.qlsach_api.repository.BorrowDetailsRepository;
 import com.oadna.qlsach_api.repository.CategoryRepository;
@@ -13,7 +14,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> findAll() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
@@ -30,21 +31,22 @@ public class CategoryService {
         }
     }
 
-    public Category update(String id, Category category) {
+    public Category updateCategory(String id, Category category) {
         Category existing = findById(id);
         existing.setCategoryName(category.getCategoryName());
         return categoryRepository.save(existing);
     }
 
-    public void deleteById(String id) {
+    public void deleteCategory(String id) {
         categoryRepository.deleteById(id);
     }
 
-    public Category create( Category category) {
-        if(categoryRepository.existsById(category.getCategoryID())) {
-            throw new RuntimeException("Mã thể loại đã tồn tại");
-        }else{
-            return categoryRepository.save(category);
+    public List<Category> createCategory(List<Category> categories){
+        for (Category category : categories) {
+            if (categoryRepository.existsById(category.getCategoryID())) {
+                throw new RuntimeException("Mã thể loại đã tồn tại!");
+            }
         }
+        return categoryRepository.saveAll(categories);
     }
 }

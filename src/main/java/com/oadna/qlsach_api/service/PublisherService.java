@@ -1,5 +1,6 @@
 package com.oadna.qlsach_api.service;
 
+import com.oadna.qlsach_api.entity.Category;
 import com.oadna.qlsach_api.entity.Publisher;
 import com.oadna.qlsach_api.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,16 @@ public class PublisherService {
                 orElseThrow(() -> new RuntimeException("Không tìm thấy nhà xuất bản!"));
     }
 
-    public Publisher createPublisher(Publisher publisher) {
-        if (publisherRepository.existsById(publisher.getPublisherID())) {
-            throw new RuntimeException("Nhà xuất bản đã tồn tại!");
-        } else {
-            return publisherRepository.save(publisher);
+    public List<Publisher> createPublisher(List<Publisher> publishers){
+        for (Publisher publisher : publishers) {
+            if (publisherRepository.existsById(publisher.getPublisherID())) {
+                throw new RuntimeException("Mã NXB đã tồn tại!");
+            }
         }
+        return publisherRepository.saveAll(publishers);
     }
 
-    public Publisher updatePublisher(Publisher publisher, String id) {
+    public Publisher updatePublisher(String id, Publisher publisher) {
         Publisher existing = findById(id);
         existing.setPublisherName(publisher.getPublisherName());
         existing.setAddress(publisher.getAddress());

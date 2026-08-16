@@ -18,12 +18,14 @@ public class AuthorService {
         return authorRepository.findAll();
     }
 
-    public Author createAuthor(Author author){
-        if (authorRepository.existsById(author.getAuthorID())){
-            throw new RuntimeException("Mã tác giả đã tồn tại!");
-        }else {
-            return authorRepository.save(author);
-        }
+    public List<Author> createAuthor(List<Author> authors){
+       for (Author author : authors) {
+           if (authorRepository.existsById(author.getAuthorID())) {
+               throw new RuntimeException("Mã tác giả đã tồn tại!");
+           }
+       }
+       return authorRepository.saveAll(authors);
+
     }
 
     public Author getAuthorById(String id){
