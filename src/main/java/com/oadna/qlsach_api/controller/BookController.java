@@ -21,8 +21,8 @@ public class BookController {
     }
 
     @PostMapping
-    public Book createBook(@Valid @RequestBody Book book){
-        return bookService.addBook(book);
+    public List<Book> createBook(@Valid @RequestBody List<Book> books){
+        return bookService.addBook(books);
     }
 
     @PutMapping("/{id}")
@@ -41,6 +41,14 @@ public class BookController {
                                     @RequestParam(defaultValue = "3") int size,
                                     @RequestParam(defaultValue = "id") String sortBy){
         return bookService.getAllBooksPaging(page, size, sortBy);
+    }
+
+    public List<Book> findBookByName(@RequestParam String name){
+        return bookService.findBookByNameIgnoreCase(name);
+    }
+
+    public List<Book> findBookByCategoryName(@RequestParam String categoryName){
+        return bookService.findBookByCategory_CategoryNameIgnoreCase(categoryName);
     }
 
 }

@@ -22,8 +22,13 @@ public class BookService {
     }
 
     //API them sach
-    public Book addBook(Book book){
-        return booksRepository.save(book);
+    public List<Book> addBook(List<Book> books){
+        for(Book book : books){
+            if(booksRepository.existsById(book.getBookID())){
+                throw new RuntimeException("Mã sách đã tồn tại!");
+            }
+        }
+        return booksRepository.saveAll(books);
     }
 
     public Book updateBook(String id, Book bookDetails){
@@ -39,7 +44,21 @@ public class BookService {
     }
 
     public void deleteBook (String id){
-        booksRepository.deleteById(id);
+        Book existing = getBookById(id);
+        booksRepository.delete(existing);
+    }
+
+    public Book getBookById(String id){
+        return booksRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("Không tìm thấy sách có id:  " + id ));
+    }
+
+    public List<Book> findBookByNameIgnoreCase(String bookName){
+        return booksRepository.findByBookNameIgnoreCase(bookName);
+    }
+
+    public List<Book> findBookByCategory_CategoryNameIgnoreCase(String categoryName){
+        return booksRepository.findByCategory_CategoryNameIgnoreCase(categoryName);
     }
 
     public Page<Book> getAllBooksPaging(int page, int size, String sortBy){
