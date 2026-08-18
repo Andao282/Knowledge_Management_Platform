@@ -1,13 +1,25 @@
 package com.oadna.qlsach_api.service;
 
+import java.util.stream.Collectors;
+
+import com.oadna.qlsach_api.dto.BookRequestDTO;
+import com.oadna.qlsach_api.dto.BookResponseDTO;
+import com.oadna.qlsach_api.entity.Author;
 import com.oadna.qlsach_api.entity.Book;
+import com.oadna.qlsach_api.entity.Category;
+import com.oadna.qlsach_api.entity.Publisher;
+import com.oadna.qlsach_api.repository.AuthorRepository;
 import com.oadna.qlsach_api.repository.BooksRepository;
+import com.oadna.qlsach_api.repository.CategoryRepository;
+import com.oadna.qlsach_api.repository.PublisherRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -16,19 +28,54 @@ public class BookService {
     @Autowired
     private BooksRepository booksRepository;
 
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
+    private PublisherRepository publisherRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     //Lay API toan bo sach
-    public List<Book> getAllBooks(){
-        return booksRepository.findAll();
+    public List<BookResponseDTO> getAllBooks() {
+        List<Book> books = booksRepository.findAll();
+        return books.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     //API them sach
-    public List<Book> addBook(List<Book> books){
-        for(Book book : books){
-            if(booksRepository.existsById(book.getBookID())){
-                throw new RuntimeException("Mã sách đã tồn tại!");
-            }
+    public BookResponseDTO addBook(BookRequestDTO bookRequestDTO) {
+        if(!booksRepository.existsById(bookRequestDTO.getBookID())){
+            throw new RuntimeException("Mã sách đã tồn tại!");
         }
-        return booksRepository.saveAll(books);
+
+        Author author = authorRepository.findById(bookRequestDTO.getAuthorID())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy tác giả mã: "+bookRequestDTO.getAuthorID()));
+
+        Publisher publisher = publisherRepository.findById(bookRequestDTO.getPublisherID())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy NXB có mã: " +bookRequestDTO.getPublisherID()));
+
+        Category category = categoryRepository.findById(bookRequestDTO.getCategoryID())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thể loại có mã: " + bookRequestDTO.getCategoryID()));
+
+        Book newBook = new Book();
+        newBook.setBookID(bookRequestDTO.getBookID());
+        newBook.setBookName(bookRequestDTO.getBookName());
+        newBook.setAuthor(author);
+        newBook.setPublisher(publisher);
+        newBook.setCategory(category);
+
+        Book savedBook = booksRepository.save(newBook);
+
+        return mapToDTO(savedBook);
+    }
+
+    public List<BookResponseDTO> addBooks(List<BookRequestDTO> bookRequest) {
+        return bookRequest.stream()
+                .map(this ::addBook)
+                .collect(Collectors.toList());
     }
 
     public Book updateBook(String id, Book bookDetails){
@@ -44,25 +91,47 @@ public class BookService {
     }
 
     public void deleteBook (String id){
-        Book existing = getBookById(id);
-        booksRepository.delete(existing);
+        if (!booksRepository.existsById(id)) {
+            throw new RuntimeException("Không tìm thấy sách có mã: " + id);
+        }
+        booksRepository.deleteById(id);
     }
 
-    public Book getBookById(String id){
-        return booksRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Không tìm thấy sách có id:  " + id ));
+    public BookResponseDTO getBookById(String id){
+      Book book = booksRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy sách có mã: " + id));
+
+      return mapToDTO(book);
+
     }
 
-    public List<Book> findBookByNameIgnoreCase(String bookName){
-        return booksRepository.findByBookNameIgnoreCase(bookName);
+    public List<BookResponseDTO> findBookByBookNameContainingIgnoreCase(String bookName){
+        List<Book> books = booksRepository.findBookByBookNameContainingIgnoreCase(bookName);
+
+        return books.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Book> findBookByCategory_CategoryNameIgnoreCase(String categoryName){
-        return booksRepository.findByCategory_CategoryNameIgnoreCase(categoryName);
+    public List<BookResponseDTO> findBookByCategory_CategoryNameIgnoreCase(String categoryName){
+        List<Book> books = booksRepository.findByCategory_CategoryNameIgnoreCase(categoryName);
+
+        return books.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     public Page<Book> getAllBooksPaging(int page, int size, String sortBy){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         return booksRepository.findAll(pageable);
+    }
+
+    private BookResponseDTO mapToDTO(Book book){
+        return BookResponseDTO.builder()
+                .bookID(book.getBookID())
+                .bookName(book.getBookName())
+                .authorName(book.getAuthor().getAuthorName())
+                .categoryName(book.getCategory().getCategoryName())
+                .publisherName(book.getPublisher().getPublisherName())
+                .build();
     }
 }

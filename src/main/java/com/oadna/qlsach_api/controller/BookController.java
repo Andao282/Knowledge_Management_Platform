@@ -1,5 +1,7 @@
 package com.oadna.qlsach_api.controller;
 
+import com.oadna.qlsach_api.dto.BookRequestDTO;
+import com.oadna.qlsach_api.dto.BookResponseDTO;
 import com.oadna.qlsach_api.entity.Book;
 import com.oadna.qlsach_api.service.BookService;
 import jakarta.validation.Valid;
@@ -16,13 +18,19 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping
-    public List<Book> getAllBooks(){
+    public List<BookResponseDTO> getAllBooks(){
         return bookService.getAllBooks();
     }
 
     @PostMapping
-    public List<Book> createBook(@Valid @RequestBody List<Book> books){
+    public BookResponseDTO createBook(@Valid @RequestBody BookRequestDTO books){
+
         return bookService.addBook(books);
+    }
+
+    @PostMapping("/multiple-books")
+    public List<BookResponseDTO> createBooks(@Valid @RequestBody List<BookRequestDTO> books){
+        return bookService.addBooks(books);
     }
 
     @PutMapping("/{id}")
@@ -43,11 +51,13 @@ public class BookController {
         return bookService.getAllBooksPaging(page, size, sortBy);
     }
 
-    public List<Book> findBookByName(@RequestParam String name){
-        return bookService.findBookByNameIgnoreCase(name);
+    @GetMapping("/search-by-name")
+    public List<BookResponseDTO> findBookByName(@RequestParam String name){
+        return bookService.findBookByBookNameContainingIgnoreCase(name);
     }
 
-    public List<Book> findBookByCategoryName(@RequestParam String categoryName){
+    @GetMapping("/search-by-category")
+    public List<BookResponseDTO> findBookByCategoryName(@RequestParam String categoryName){
         return bookService.findBookByCategory_CategoryNameIgnoreCase(categoryName);
     }
 
