@@ -27,7 +27,7 @@ public class BorrowSlips {
     @Column(name = "DueDate")
     private LocalDate dueDate;
 
-    @Column(name = "Return")
+    @Column(name = "IsReturn")
     private Boolean returned;
 
 }
