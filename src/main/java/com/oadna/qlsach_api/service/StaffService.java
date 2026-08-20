@@ -1,6 +1,7 @@
 package com.oadna.qlsach_api.service;
 
 
+import com.oadna.qlsach_api.dto.StaffResponseDTO;
 import com.oadna.qlsach_api.entity.Staff;
 import com.oadna.qlsach_api.repository.StaffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class StaffService {
         existing.setName(staff.getName());
         existing.setDob(staff.getDob());
         existing.setGender(staff.getGender());
-        existing.setLevel(staff.getLevel());
+        existing.setRole(staff.getRole());
         existing.setPhone(staff.getPhone());
 
         return staffRepository.save(existing);
@@ -40,5 +41,13 @@ public class StaffService {
     public void delete(String id) {
         Staff existing = findById(id);
         staffRepository.delete(existing);
+    }
+
+    private StaffResponseDTO mapToDTO(Staff staff) {
+        return StaffResponseDTO.builder()
+                .staffID(staff.getStaffID())
+                .staffName(staff.getName())
+                .role(staff.getRole())
+                .build();
     }
 }
