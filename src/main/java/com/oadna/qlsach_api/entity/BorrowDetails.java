@@ -1,9 +1,6 @@
 package com.oadna.qlsach_api.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.cglib.core.Local;
 
@@ -16,6 +13,16 @@ import java.util.Date;
 public class BorrowDetails {
     @EmbeddedId
     private BorrowDetailsID id;
+
+    @ManyToOne
+    @MapsId("borrowID")
+    @JoinColumn(name = "BorrowID")
+    private BorrowSlips borrowSlips;
+
+    @ManyToOne
+    @MapsId("bookID")
+    @JoinColumn(name = "BookID")
+    private Book book;
 
     @Column(name = "BorrowCondition", length = 20)
     private String borrowCondition;

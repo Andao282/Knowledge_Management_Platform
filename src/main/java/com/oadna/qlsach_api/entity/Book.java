@@ -31,5 +31,7 @@ public class Book {
     @JoinColumn(name = "PublisherID")
     private Publisher publisher;
 
+    @Column(name = "Quantity")
+    private Integer quantity;
 
 }

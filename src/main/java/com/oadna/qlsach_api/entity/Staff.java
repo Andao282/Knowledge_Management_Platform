@@ -26,8 +26,8 @@ public class Staff {
     @Column(name = "DOB")
     private LocalDate dob;
 
-    @Column(name = "Level", length = 30)
-    private String level;
+    @Column(name = "Role", length = 30)
+    private String role;
 
     @Column(name = "Phone", length = 10)
     private String phone;

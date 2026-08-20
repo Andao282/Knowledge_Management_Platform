@@ -33,4 +33,10 @@ public class Reader {
 
     @Column(name = "IsPaid")
     private Boolean isPaid;
+
+    @Column(name = "Email", length = 50)
+    private String email;
+
+    @Column(name = "Phone", length = 10)
+    private String phone;
 }
