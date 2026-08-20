@@ -45,7 +45,7 @@ public class BookController {
     }
 
     @GetMapping("/page")
-    public Page<Book> getBooksPaging(@RequestParam(defaultValue = "0") int page,
+    public Page<BookResponseDTO> getBooksPaging(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "3") int size,
                                     @RequestParam(defaultValue = "id") String sortBy){
         return bookService.getAllBooksPaging(page, size, sortBy);
