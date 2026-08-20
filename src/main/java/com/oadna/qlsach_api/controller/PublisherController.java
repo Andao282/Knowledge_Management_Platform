@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Book_Manage_System/publishers")
+@RequestMapping("/Knowledge_Management_Platform/publishers")
 
 public class PublisherController {
     @Autowired

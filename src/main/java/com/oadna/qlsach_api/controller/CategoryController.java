@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Book_Manage_System/categories")
+@RequestMapping("/Knowledge_Management_Platform/categories")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;

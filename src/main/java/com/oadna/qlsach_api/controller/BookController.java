@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Book_Manage_System/books")
+@RequestMapping("/Knowledge_Management_Platform/books")
 public class BookController {
     @Autowired
     private BookService bookService;

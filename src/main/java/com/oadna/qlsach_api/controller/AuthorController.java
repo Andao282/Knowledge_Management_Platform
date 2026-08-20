@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Book_Manage_System/authors")
+@RequestMapping("/Knowledge_Management_Platform/authors")
 
 public class AuthorController {
     @Autowired
