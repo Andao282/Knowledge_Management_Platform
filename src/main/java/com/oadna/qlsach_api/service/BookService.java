@@ -120,9 +120,10 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-    public Page<Book> getAllBooksPaging(int page, int size, String sortBy){
+    public Page<BookResponseDTO> getAllBooksPaging(int page, int size, String sortBy){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-        return booksRepository.findAll(pageable);
+        Page<Book> bookPage = booksRepository.findAll(pageable);
+        return bookPage.map(this::mapToDTO);
     }
 
     private BookResponseDTO mapToDTO(Book book){
