@@ -98,8 +98,8 @@ public class BookService {
     }
 
     public BookResponseDTO getBookById(String id){
-        Book book = booksRepository.findById(id).
-              orElseThrow(() -> new RuntimeException("Không tìm thấy sách có mã: " + id));
+      Book book = booksRepository.findById(id)
+              .orElseThrow(() -> new RuntimeException("Không tìm thấy sách có mã: " + id));
 
         return mapToDTO(book);
     }
