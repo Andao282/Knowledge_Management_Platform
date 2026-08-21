@@ -24,7 +24,6 @@ public class BookController {
 
     @PostMapping
     public BookResponseDTO createBook(@Valid @RequestBody BookRequestDTO books){
-
         return bookService.addBook(books);
     }
 
