@@ -1,12 +1,14 @@
 package com.oadna.qlsach_api.service;
 
 
+import com.oadna.qlsach_api.dto.AuthorResponseDTO;
 import com.oadna.qlsach_api.entity.Author;
 import com.oadna.qlsach_api.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
@@ -47,6 +49,24 @@ public class AuthorService {
     public void deleteAuthor(String id){
         Author existing = getAuthorById(id);
         authorRepository.delete(existing);
+    }
+
+    public List<AuthorResponseDTO> getAuthorsByName(String name){
+        List<Author> authors = authorRepository.findAuthorByNameIgnoreCase(name);
+
+        return authors.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private AuthorResponseDTO mapToDTO(Author author){
+        return AuthorResponseDTO.builder()
+                .authorID(author.getAuthorID())
+                .authorName(author.getAuthorName())
+                .dob(author.getDob())
+                .authorHometown(author.getAuthorHometown())
+                .penName(author.getPenName())
+                .build();
     }
 
 }
