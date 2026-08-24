@@ -1,6 +1,8 @@
 package com.oadna.qlsach_api.controller;
 
 
+import com.oadna.qlsach_api.dto.AuthorRequestDTO;
+import com.oadna.qlsach_api.dto.AuthorResponseDTO;
 import com.oadna.qlsach_api.entity.Author;
 import com.oadna.qlsach_api.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +41,10 @@ public class AuthorController {
     @PutMapping("/{id}")
     public Author updateAuthor(@RequestBody Author author, @PathVariable String id){
         return authorService.updateAuthor(id, author);
+    }
+
+    @GetMapping("/search-by-name")
+    public List<AuthorResponseDTO> searchAuthorByName(@RequestParam String name){
+        return authorService.getAuthorsByName(name);
     }
 }
