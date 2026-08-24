@@ -28,8 +28,13 @@ public class AuthorController {
     }
 
     @PostMapping
-    public List<Author> createAuthor(@RequestBody List<Author> authors){
-        return authorService.createAuthor(authors);
+    public AuthorResponseDTO createAuthor(@RequestBody AuthorRequestDTO authorRequestDTO){
+        return authorService.createAuthor(authorRequestDTO);
+    }
+
+    @PostMapping("/multiple-authors")
+    public List<AuthorResponseDTO> createMultipleAuthors(@RequestBody List<AuthorRequestDTO> authors){
+        return authorService.createAuthors(authors);
     }
 
     @DeleteMapping("/{id}")
