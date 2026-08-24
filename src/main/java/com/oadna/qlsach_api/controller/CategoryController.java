@@ -1,5 +1,7 @@
 package com.oadna.qlsach_api.controller;
 
+import com.oadna.qlsach_api.dto.CategoryRequestDTO;
+import com.oadna.qlsach_api.dto.CategoryResponseDTO;
 import com.oadna.qlsach_api.entity.Category;
 import com.oadna.qlsach_api.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public List<Category> getAllCategories(){
+    public List<CategoryResponseDTO> getAllCategories(){
         return categoryService.getAllCategories();
     }
 
@@ -24,13 +26,18 @@ public class CategoryController {
     }
 
     @PostMapping
-    public List<Category> createCategory(@RequestBody List<Category> categories){
-        return categoryService.createCategory(categories);
+    public CategoryResponseDTO createCategory(@RequestBody CategoryRequestDTO category){
+        return categoryService.createCategory(category);
+    }
+
+    @PostMapping("/multiple-categories")
+    public List<CategoryResponseDTO> createMultipleCategories(@RequestBody List<CategoryRequestDTO> category){
+        return categoryService.createCategories(category);
     }
 
 
     @PutMapping("/{id}")
-    public Category updateCategory(@RequestBody Category category, @PathVariable String id){
+    public CategoryResponseDTO updateCategory(@RequestBody CategoryRequestDTO category, @PathVariable String id){
         return categoryService.updateCategory(id, category);
     }
 
@@ -41,7 +48,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{search}")
-    public List<Category> findCategoryByName(@RequestParam String name){
+    public List<CategoryResponseDTO> findCategoryByName(@RequestParam String name){
         return categoryService.findByName(name);
     }
 }
