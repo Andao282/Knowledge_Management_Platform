@@ -27,6 +27,11 @@ public class StaffController {
         return staffService.createStaff(staff);
     }
 
+    @PostMapping("/multiple-staffs")
+    public List<StaffResponseDTO> createMultipleStaffs(@RequestBody List<StaffResponseDTO> staff){
+        return staffService.createStaffs(staff);
+    }
+
     @PutMapping("/{id}")
     public StaffResponseDTO updateStaff(@PathVariable String id, @Valid @RequestBody StaffResponseDTO staff){
         return staffService.updateStaff(id, staff);

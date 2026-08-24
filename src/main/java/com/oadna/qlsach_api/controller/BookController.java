@@ -60,4 +60,9 @@ public class BookController {
         return bookService.findBookByCategory_CategoryNameIgnoreCase(categoryName);
     }
 
+    @GetMapping("/{id}")
+    public BookResponseDTO getBookById(@PathVariable String id){
+        return bookService.getBookById(id);
+    }
+
 }
