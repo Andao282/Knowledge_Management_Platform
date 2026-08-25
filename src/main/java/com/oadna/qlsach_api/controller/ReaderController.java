@@ -22,7 +22,7 @@ public class ReaderController {
         return readerService.getAllReaders();
     }
 
-    @GetMapping("/{id")
+    @GetMapping("/{id}")
     public ReaderResponseDTO getReaderByID(@PathVariable String id){
         return readerService.getReader(id);
     }
@@ -46,11 +46,6 @@ public class ReaderController {
     public String deleteReader(@PathVariable String id){
         readerService.deleteReader(id);
         return "Delete successfully!";
-    }
-
-    @GetMapping("/{id}")
-    public ReaderResponseDTO getReaderById(@PathVariable String id){
-        return readerService.getReader(id);
     }
 
     @GetMapping("/{search-by-name}")

@@ -1,5 +1,7 @@
 package com.oadna.qlsach_api.controller;
 
+import com.oadna.qlsach_api.dto.PublisherRequestDTO;
+import com.oadna.qlsach_api.dto.PublisherResponseDTO;
 import com.oadna.qlsach_api.entity.Author;
 import com.oadna.qlsach_api.entity.Publisher;
 import com.oadna.qlsach_api.service.PublisherService;
@@ -16,7 +18,7 @@ public class PublisherController {
     private PublisherService publisherService;
 
     @GetMapping
-    public List<Publisher> getAllPublishers(){
+    public List<PublisherResponseDTO> getAllPublishers(){
         return publisherService.getAllPublishers();
     }
 
@@ -25,13 +27,23 @@ public class PublisherController {
         return publisherService.findById(id);
     }
 
+    @GetMapping("/search-by-name")
+    public List<PublisherResponseDTO> findPublisherByName(@RequestParam String name){
+        return publisherService.findPublisherByPublisherName(name);
+    }
+
     @PostMapping
-    public List<Publisher> createPublisher(@RequestBody List<Publisher> publishers){
-        return publisherService.createPublisher(publishers);
+    public PublisherResponseDTO createPublisher(@RequestBody PublisherRequestDTO publisher){
+        return publisherService.createPublisher(publisher);
+    }
+
+    @PostMapping("/multiple-publishers")
+    public List<PublisherResponseDTO> createPublishers(@RequestBody List<PublisherRequestDTO> publisherRequests){
+        return publisherService.createPublishers(publisherRequests);
     }
 
     @PutMapping("/{id}")
-    public Publisher updatePublisher(@RequestBody Publisher publisher, @PathVariable String id){
+    public PublisherResponseDTO updatePublisher(@RequestBody PublisherRequestDTO publisher, @PathVariable String id){
         return publisherService.updatePublisher(id, publisher);
     }
 
