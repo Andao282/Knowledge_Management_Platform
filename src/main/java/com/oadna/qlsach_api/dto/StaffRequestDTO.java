@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,4 +27,7 @@ public class StaffRequestDTO {
 
     @NotBlank(message = "Chức vụ(Role) không được để trống!")
     private String role;
+
+    @NotBlank(message = "Không được để trống ngày sinh!")
+    private LocalDate dob;
 }

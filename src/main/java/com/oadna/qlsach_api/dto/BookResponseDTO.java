@@ -15,4 +15,5 @@ public class BookResponseDTO {
     private String authorName;
     private String categoryName;
     private String publisherName;
+    private Integer quantity;
 }
