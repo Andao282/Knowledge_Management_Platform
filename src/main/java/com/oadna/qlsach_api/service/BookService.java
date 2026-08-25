@@ -12,6 +12,7 @@ import com.oadna.qlsach_api.repository.AuthorRepository;
 import com.oadna.qlsach_api.repository.BooksRepository;
 import com.oadna.qlsach_api.repository.CategoryRepository;
 import com.oadna.qlsach_api.repository.PublisherRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -47,7 +48,7 @@ public class BookService {
 
     //API them sach
     public BookResponseDTO addBook(BookRequestDTO bookRequestDTO) {
-        if(!booksRepository.existsById(bookRequestDTO.getBookID())){
+        if(booksRepository.existsById(bookRequestDTO.getBookID())){
             throw new RuntimeException("Mã sách đã tồn tại!");
         }
 
@@ -66,28 +67,42 @@ public class BookService {
         newBook.setAuthor(author);
         newBook.setPublisher(publisher);
         newBook.setCategory(category);
+        newBook.setQuantity(bookRequestDTO.getQuantity());
 
         Book savedBook = booksRepository.save(newBook);
 
         return mapToDTO(savedBook);
     }
 
+    @Transactional
     public List<BookResponseDTO> addBooks(List<BookRequestDTO> bookRequest) {
         return bookRequest.stream()
                 .map(this ::addBook)
                 .collect(Collectors.toList());
     }
 
-    public Book updateBook(String id, Book bookDetails){
-        Book existedBook = booksRepository.findById(id).orElseThrow(() -> new RuntimeException("Book with id " + id + " not found"));
+    public BookResponseDTO updateBook(String id, BookRequestDTO bookDetails){
+        Book existedBook = booksRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book with id " + id + " not found"));
+
+        Author author = authorRepository.findById(bookDetails.getAuthorID())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy tác giả có mã: " + bookDetails.getAuthorID()));
+
+        Category category = categoryRepository.findById(bookDetails.getCategoryID())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thể loại có mã: " + bookDetails.getCategoryID()));
+
+        Publisher publisher = publisherRepository.findById(bookDetails.getPublisherID())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy NXB có mã: " + bookDetails.getPublisherID()));
 
         //Lay du lieu moi (bookDetails) gan len du lieu cu
         existedBook.setBookName(bookDetails.getBookName());
-        existedBook.setAuthor(bookDetails.getAuthor());
-        existedBook.setCategory(bookDetails.getCategory());
-        existedBook.setPublisher(bookDetails.getPublisher());
+        existedBook.setAuthor(author);
+        existedBook.setCategory(category);
+        existedBook.setPublisher(publisher);
+        existedBook.setQuantity(bookDetails.getQuantity());
 
-        return booksRepository.save(existedBook);
+        Book updatedBook = booksRepository.save(existedBook);
+        return mapToDTO(updatedBook);
     }
 
     public void deleteBook (String id){
@@ -133,6 +148,7 @@ public class BookService {
                 .authorName(book.getAuthor().getAuthorName())
                 .categoryName(book.getCategory().getCategoryName())
                 .publisherName(book.getPublisher().getPublisherName())
+                .quantity(book.getQuantity())
                 .build();
     }
 }

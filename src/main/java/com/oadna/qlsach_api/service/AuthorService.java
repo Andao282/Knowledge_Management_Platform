@@ -23,6 +23,7 @@ public class AuthorService {
 
     public AuthorResponseDTO createAuthor(AuthorRequestDTO authors){
       Author author = new Author();
+      author.setAuthorID(authors.getAuthorID());
       author.setAuthorName(authors.getAuthorName());
       author.setAuthorHometown(authors.getAuthorHometown());
       author.setDob(authors.getDob());
@@ -60,7 +61,7 @@ public class AuthorService {
     }
 
     public List<AuthorResponseDTO> getAuthorsByName(String name){
-        List<Author> authors = authorRepository.findAuthorByNameIgnoreCase(name);
+        List<Author> authors = authorRepository.findAuthorByAuthorNameIgnoreCase(name);
 
         return authors.stream()
                 .map(this::mapToDTO)

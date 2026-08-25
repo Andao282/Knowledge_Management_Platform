@@ -53,6 +53,7 @@ public class CategoryService {
 
     public CategoryResponseDTO createCategory(CategoryRequestDTO categories){
         Category category = new Category();
+        category.setCategoryID(categories.getCategoryID());
         category.setCategoryName(category.getCategoryName());
         Category savedCategory = categoryRepository.save(category);
         return  mapToDTO(savedCategory);
