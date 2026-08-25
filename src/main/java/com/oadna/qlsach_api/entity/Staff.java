@@ -18,7 +18,7 @@ public class Staff {
     private String staffID;
 
     @Column(name = "Name", length = 30)
-    private String name;
+    private String staffName;
 
     @Column(name = "Gender")
     private Boolean gender;
