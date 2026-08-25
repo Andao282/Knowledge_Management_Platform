@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface AuthorRepository extends JpaRepository<Author,String> {
-    List<Author> findAuthorByNameIgnoreCase(String name);
+    List<Author> findAuthorByAuthorNameIgnoreCase(String name);
 }
