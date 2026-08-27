@@ -1,5 +1,6 @@
 package com.oadna.qlsach_api.service;
 
+import com.oadna.qlsach_api.dto.BookBorrowDetailRequestDTO;
 import com.oadna.qlsach_api.dto.BorrowRequestDTO;
 import com.oadna.qlsach_api.entity.*;
 import com.oadna.qlsach_api.repository.*;
@@ -38,26 +39,29 @@ public class BorrowService {
 
         borrowSlipsRepository.save(borrowSlips);
 
-        for (String bookID : requestDTO.getBooksIDs()){
-            Book book = booksRepository.findById(bookID)
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy sách có mã: " + bookID));
+        for (BookBorrowDetailRequestDTO detailDTO : requestDTO.getDetails()){
+            Book book = booksRepository.findById(detailDTO.getBookID())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy sách có mã: " + detailDTO.getBookID()));
 
             if(book.getQuantity() == null || book.getQuantity() <= 0){
                 throw new RuntimeException("Sách "+ book.getBookName() + " đã hết trong kho!");
             }
-            book.setQuantity(book.getQuantity() - 1);
 
+            book.setQuantity(book.getQuantity() - 1);
             booksRepository.save(book);
 
             BorrowDetailsID detailsID = new BorrowDetailsID();
             detailsID.setBorrowID(newBorrowID);
-            detailsID.setBookID(bookID);
+            detailsID.setBookID(book.getBookID());
 
             BorrowDetails details = new BorrowDetails();
             details.setId(detailsID);
             details.setBorrowSlips(borrowSlips);
             details.setBook(book);
             details.setBorrowCondition("Bình thường");
+            details.setExpectedReturnDate(requestDTO.getDueDate());
+            details.setActualReturnDate(null);
+            details.setReturnCondition(null);
 
             borrowDetailsRepository.save(details);
         }
