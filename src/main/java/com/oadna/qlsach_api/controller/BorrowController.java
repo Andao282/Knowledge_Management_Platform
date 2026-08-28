@@ -2,7 +2,9 @@ package com.oadna.qlsach_api.controller;
 
 import com.oadna.qlsach_api.dto.BorrowRequestDTO;
 import com.oadna.qlsach_api.service.BorrowService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +18,8 @@ public class BorrowController {
     private BorrowService borrowService;
 
     @PostMapping
-    public ResponseEntity<String> createBorrowSlip(@RequestBody BorrowRequestDTO borrowRequestDTO){
+    public ResponseEntity<String> createBorrowSlip(@Valid @RequestBody BorrowRequestDTO borrowRequestDTO){
         String message = borrowService.createBorrowSlip(borrowRequestDTO);
-        return ResponseEntity.ok(message);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 }

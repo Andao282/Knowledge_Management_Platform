@@ -30,15 +30,15 @@ public class BorrowRequestDTO {
     @Valid
     private List<BookBorrowDetailRequestDTO> details;
 
-    @NotBlank(message = "Không được để trống mã phiếu mượn!")
-    private String borrowID;
-
-    @NotNull(message = "Không được để trống ngày mượn!")
-    private LocalDate borrowDate;
-
-    @NotNull(message = "Hạn trả không được để trống!")
-    @Future(message = "Hạn trả phải là một ngày trong tương lai!")
-    private LocalDate dueDate;
+//    @NotBlank(message = "Không được để trống mã phiếu mượn!")
+//    private String borrowID;
+//
+//    @NotNull(message = "Không được để trống ngày mượn!")
+//    private LocalDate borrowDate;
+//
+//    @NotNull(message = "Hạn trả không được để trống!")
+//    @Future(message = "Hạn trả phải là một ngày trong tương lai!")
+//    private LocalDate dueDate;
 
 
 

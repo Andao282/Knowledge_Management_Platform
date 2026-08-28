@@ -59,7 +59,7 @@ public class BorrowService {
             details.setBorrowSlips(borrowSlips);
             details.setBook(book);
             details.setBorrowCondition("Bình thường");
-            details.setExpectedReturnDate(requestDTO.getDueDate());
+            details.setExpectedReturnDate(borrowSlips.getDueDate());
             details.setActualReturnDate(null);
             details.setReturnCondition(null);
 
