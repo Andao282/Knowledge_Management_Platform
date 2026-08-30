@@ -118,4 +118,9 @@ public class BorrowService {
         }
         return "Đã ghi nhận phiếu mượn " + requestDTO.getBorrowID() + " được hoàn trả 1 phần!";
     }
+
+    public List<BorrowSlips> getAllBorrowSlips(){
+        return borrowSlipsRepository.findAll();
+    }
+
 }
