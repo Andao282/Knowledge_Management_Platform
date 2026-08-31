@@ -1,9 +1,6 @@
 package com.oadna.qlsach_api.service;
 
-import com.oadna.qlsach_api.dto.BookBorrowDetailRequestDTO;
-import com.oadna.qlsach_api.dto.BookReturnDetailRequestDTO;
-import com.oadna.qlsach_api.dto.BorrowRequestDTO;
-import com.oadna.qlsach_api.dto.ReturnRequestDTO;
+import com.oadna.qlsach_api.dto.*;
 import com.oadna.qlsach_api.entity.*;
 import com.oadna.qlsach_api.repository.*;
 import jakarta.transaction.Transactional;
@@ -119,8 +116,50 @@ public class BorrowService {
         return "Đã ghi nhận phiếu mượn " + requestDTO.getBorrowID() + " được hoàn trả 1 phần!";
     }
 
-    public List<BorrowSlips> getAllBorrowSlips(){
-        return borrowSlipsRepository.findAll();
+    public List<BorrowResponseDTO> getAllBorrowSlips(){
+        List<BorrowSlips> listSlips = borrowSlipsRepository.findAll();
+
+        return listSlips.stream().map(slip -> {
+            BorrowResponseDTO dto = new BorrowResponseDTO();
+            dto.setBorrowID(slip.getBorrowID());
+            dto.setStaffID(slip.getStaffID().getStaffID());
+            dto.setReaderID(slip.getReaderID().getReaderID());
+
+            dto.setBorrowDate(slip.getBorrowDate());
+            dto.setDueDate(slip.getDueDate());
+            dto.setReturned(slip.getReturned());
+
+            return dto;
+        }).toList();
     }
 
+    public BorrowSlipDetailResponseDTO getBorrowSlipByID(String borrowID){
+        BorrowSlips slips = borrowSlipsRepository.findById(borrowID)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn có mã " + borrowID));
+
+        List<BorrowDetails> detailsList = borrowDetailsRepository.findById_BorrowID(borrowID);
+
+        List<BorrowDetailItemDTO> detailDTOs = detailsList.stream().map(detail -> {
+            BorrowDetailItemDTO detailDTO = new BorrowDetailItemDTO();
+            detailDTO.setBookID(detail.getBook().getBookID());
+            detailDTO.setBookName(detail.getBook().getBookName());
+            detailDTO.setBorrowCondition(detail.getBorrowCondition());
+            detailDTO.setExpectedReturnDate(detail.getExpectedReturnDate());
+            detailDTO.setActualReturnDate(detail.getActualReturnDate());
+            detailDTO.setReturnCondition(detail.getReturnCondition());
+
+            return detailDTO;
+        }).toList();
+
+        BorrowSlipDetailResponseDTO responseDTO = new BorrowSlipDetailResponseDTO();
+        responseDTO.setBorrowID(slips.getBorrowID());
+        responseDTO.setStaffID(slips.getStaffID().getStaffID());
+        responseDTO.setReaderID(slips.getReaderID().getReaderID());
+        responseDTO.setBorrowDate(slips.getBorrowDate());
+        responseDTO.setDueDate(slips.getDueDate());
+        responseDTO.setReturned(slips.getReturned());
+        responseDTO.setDetails(detailDTOs);
+
+        return responseDTO;
+    }
 }

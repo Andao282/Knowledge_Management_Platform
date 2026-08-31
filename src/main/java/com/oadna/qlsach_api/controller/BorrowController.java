@@ -1,6 +1,8 @@
 package com.oadna.qlsach_api.controller;
 
 import com.oadna.qlsach_api.dto.BorrowRequestDTO;
+import com.oadna.qlsach_api.dto.BorrowResponseDTO;
+import com.oadna.qlsach_api.dto.BorrowSlipDetailResponseDTO;
 import com.oadna.qlsach_api.dto.ReturnRequestDTO;
 import com.oadna.qlsach_api.entity.BorrowSlips;
 import com.oadna.qlsach_api.service.BorrowService;
@@ -31,8 +33,14 @@ public class BorrowController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BorrowSlips>> getAllBorrowSlips(){
-        List<BorrowSlips> slipsList = borrowService.getAllBorrowSlips();
+    public ResponseEntity<List<BorrowResponseDTO>> getAllBorrowSlips(){
+        List<BorrowResponseDTO> slipsList = borrowService.getAllBorrowSlips();
         return new ResponseEntity<>(slipsList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{borrowID}")
+    public ResponseEntity<BorrowSlipDetailResponseDTO> getBorrowById(@PathVariable String borrowID){
+        BorrowSlipDetailResponseDTO result = borrowService.getBorrowSlipByID(borrowID);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
