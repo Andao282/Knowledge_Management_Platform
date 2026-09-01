@@ -43,4 +43,15 @@ public class BorrowController {
         BorrowSlipDetailResponseDTO result = borrowService.getBorrowSlipByID(borrowID);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/reader/{readerID}")
+    public ResponseEntity<?> getBorrowByReaderID(@PathVariable String readerID){
+        List<BorrowResponseDTO> borrowHistory = borrowService.getBorrowHistoryByReader(readerID);
+
+        if(borrowHistory.isEmpty()){
+            return ResponseEntity.ok("Không có lịch sử mượn sách!");
+        }
+
+        return new ResponseEntity<>(borrowHistory, HttpStatus.OK);
+    }
 }

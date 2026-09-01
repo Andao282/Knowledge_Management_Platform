@@ -162,4 +162,22 @@ public class BorrowService {
 
         return responseDTO;
     }
+
+    public List<BorrowResponseDTO> getBorrowHistoryByReader(String readerID) {
+        readerRepository.findById(readerID)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy độc giả có mã" + readerID));
+
+        List<BorrowSlips> listSlips = borrowSlipsRepository.findByReaderID_ReaderID(readerID);
+
+            return listSlips.stream().map(slip -> {
+                BorrowResponseDTO dto = new BorrowResponseDTO();
+                dto.setBorrowID(slip.getBorrowID());
+                dto.setStaffID(slip.getStaffID().getStaffID());
+                dto.setReaderID(slip.getReaderID().getReaderID());
+                dto.setBorrowDate(slip.getBorrowDate());
+                dto.setDueDate(slip.getDueDate());
+                dto.setReturned(slip.getReturned());
+                return dto;
+            }).toList();
+        }
 }
