@@ -18,6 +18,7 @@ public class BorrowService {
     @Autowired private ReaderRepository readerRepository;
     @Autowired private BorrowSlipsRepository borrowSlipsRepository;
     @Autowired private BorrowDetailsRepository borrowDetailsRepository;
+    @Autowired private FineSlipsRepository fineSlipsRepository;
 
     @Transactional
     public String createBorrowSlip(BorrowRequestDTO requestDTO){
@@ -93,6 +94,33 @@ public class BorrowService {
             detail.setActualReturnDate(LocalDate.now());
             detail.setReturnCondition(returnDetail.getReturnCondition());
             borrowDetailsRepository.save(detail);
+
+            double fineAmount = 0.0;
+            StringBuilder fineReason = new StringBuilder();
+
+            long daysLate = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), detail.getExpectedReturnDate());
+            if(daysLate > 0){
+                fineAmount += daysLate * 5000;
+                fineReason.append("Trễ hạn ").append(daysLate).append(" ngày.");
+            }
+
+            if(!detail.getReturnCondition().equalsIgnoreCase("Bình thường")){
+                fineAmount += 50000;
+                fineReason.append("Tình trạng trả: ").append(returnDetail.getReturnCondition());
+            }
+
+            if(fineAmount > 0){
+                FineSlips fineSlips = new FineSlips();
+                fineSlips.setFineID("PP-" +UUID.randomUUID().toString().substring(0, 4));
+
+                fineSlips.setBorrowDetails(detail);
+                fineSlips.setFineDate(LocalDate.now());
+                fineSlips.setFineReason(fineReason.toString());
+                fineSlips.setFineAmount(fineAmount);
+                fineSlips.setIsPaid(false);
+
+                fineSlipsRepository.save(fineSlips);
+            }
 
             Book book = detail.getBook();
             book.setQuantity(book.getQuantity() + 1);
