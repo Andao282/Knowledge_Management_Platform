@@ -1,4 +1,40 @@
 package com.oadna.qlsach_api.service;
 
+import com.oadna.qlsach_api.entity.Account;
+import com.oadna.qlsach_api.entity.Staff;
+import com.oadna.qlsach_api.repository.AccountRepository;
+import com.oadna.qlsach_api.repository.StaffRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+
+@Service
 public class AccountService {
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private StaffRepository staffRepository;
+
+    public void createAccount(String username, String password, String staffID, String role, String note) {
+        Account account = new Account();
+        account.setUsername(username);
+
+        String hashedPassword = passwordEncoder.encode(password);
+        account.setPassword(hashedPassword);
+        account.setCreationDate(LocalDate.now());
+        account.setStatus(true);
+        account.setNote(note);
+        account.setRole(role);
+
+        Staff staff = staffRepository.findById(staffID)
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên có mã " + staffID));
+        account.setStaff(staff);
+        accountRepository.save(account);
+    }
 }
