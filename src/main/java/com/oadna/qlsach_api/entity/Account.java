@@ -14,7 +14,7 @@ public class Account {
     @Column(name = "Username", length = 50)
     private String username;
 
-    @Column(name = "Password", length = 50)
+    @Column(name = "Password", length = 255)
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,6 +26,9 @@ public class Account {
 
     @Column(name = "CreationDate")
     private LocalDate creationDate;
+
+    @Column(name = "Role", length = 50)
+    private String role;
 
     @Column(name = "Note")
     private String note;
