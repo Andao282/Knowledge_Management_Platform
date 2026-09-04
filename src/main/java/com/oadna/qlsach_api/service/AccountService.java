@@ -21,6 +21,9 @@ public class AccountService {
     @Autowired
     private StaffRepository staffRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     public void createAccount(String username, String password, String staffID, String role, String note) {
         Account account = new Account();
         account.setUsername(username);
@@ -36,5 +39,21 @@ public class AccountService {
                         .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên có mã " + staffID));
         account.setStaff(staff);
         accountRepository.save(account);
+    }
+
+    public String login(String username, String password) {
+        Account account = accountRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("Tài khoản không tồn tại!"));
+
+        if(account.getStatus() != null && !account.getStatus()){
+            throw new RuntimeException("Tài khoản bị khóa! Liên hệ admin để mở khóa!") ;
+        }
+
+        if(!passwordEncoder.matches(password, account.getPassword())){
+            throw new RuntimeException("Sai mật khẩu!");
+        }
+
+        String token = jwtService.generateToken(account.getUsername(), account.getRole());
+        return token;
     }
 }

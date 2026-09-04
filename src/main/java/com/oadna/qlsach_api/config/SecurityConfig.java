@@ -19,6 +19,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth
                         -> auth.requestMatchers("/Knowledge_Management_Platform/accounts/create").permitAll()
+                               .requestMatchers("/Knowledge_Management_Platform/accounts/login").permitAll()
                         .anyRequest().permitAll()
                 );
         return http.build();
