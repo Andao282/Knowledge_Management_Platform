@@ -6,6 +6,7 @@ import com.oadna.qlsach_api.entity.Reader;
 import com.oadna.qlsach_api.service.ReaderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class ReaderController {
     public ReaderResponseDTO updateReader(@PathVariable String id, @Valid @RequestBody ReaderRequestDTO reader){
         return readerService.updateReader(id, reader);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deleteReader(@PathVariable String id){
         readerService.deleteReader(id);

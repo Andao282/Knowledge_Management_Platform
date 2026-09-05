@@ -6,6 +6,7 @@ import com.oadna.qlsach_api.dto.AuthorResponseDTO;
 import com.oadna.qlsach_api.entity.Author;
 import com.oadna.qlsach_api.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class AuthorController {
         return authorService.createAuthors(authors);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deleteAuthorById(@PathVariable String id){
         authorService.deleteAuthor(id);

@@ -7,6 +7,7 @@ import com.oadna.qlsach_api.repository.StaffRepository;
 import com.oadna.qlsach_api.service.StaffService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class StaffController {
     public StaffResponseDTO updateStaff(@PathVariable String id, @Valid @RequestBody StaffRequestDTO staff){
         return staffService.updateStaff(id, staff);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deleteStaff(@PathVariable String id){
         staffService.deleteStaff(id);

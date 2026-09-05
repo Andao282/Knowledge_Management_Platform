@@ -6,6 +6,7 @@ import com.oadna.qlsach_api.entity.Author;
 import com.oadna.qlsach_api.entity.Publisher;
 import com.oadna.qlsach_api.service.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class PublisherController {
         return publisherService.updatePublisher(id, publisher);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deletePublisher(@PathVariable String id){
         publisherService.deletePublisher(id);

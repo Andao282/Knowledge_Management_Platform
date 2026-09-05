@@ -7,6 +7,7 @@ import com.oadna.qlsach_api.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class BookController {
     public BookResponseDTO updateBook(@PathVariable String id, @Valid @RequestBody BookRequestDTO bookDetails){
         return bookService.updateBook(id, bookDetails);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deleteBook(@PathVariable String id){
         bookService.deleteBook(id);

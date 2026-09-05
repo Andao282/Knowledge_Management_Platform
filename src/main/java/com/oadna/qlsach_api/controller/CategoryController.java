@@ -5,6 +5,7 @@ import com.oadna.qlsach_api.dto.CategoryResponseDTO;
 import com.oadna.qlsach_api.entity.Category;
 import com.oadna.qlsach_api.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class CategoryController {
         return categoryService.updateCategory(id, category);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deleteCategory(@PathVariable String id){
         categoryService.deleteCategory(id);
