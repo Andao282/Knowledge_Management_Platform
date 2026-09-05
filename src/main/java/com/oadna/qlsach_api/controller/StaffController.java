@@ -34,6 +34,7 @@ public class StaffController {
         return staffService.createStaffs(staff);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public StaffResponseDTO updateStaff(@PathVariable String id, @Valid @RequestBody StaffRequestDTO staff){
         return staffService.updateStaff(id, staff);

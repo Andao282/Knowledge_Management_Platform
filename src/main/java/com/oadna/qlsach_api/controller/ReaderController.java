@@ -38,6 +38,7 @@ public class ReaderController {
         return readerService.createReaders(readers);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ReaderResponseDTO updateReader(@PathVariable String id, @Valid @RequestBody ReaderRequestDTO reader){
         return readerService.updateReader(id, reader);

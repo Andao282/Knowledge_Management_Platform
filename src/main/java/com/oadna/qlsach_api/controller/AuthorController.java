@@ -45,6 +45,7 @@ public class AuthorController {
         return "Xóa tác giả thành công!";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public Author updateAuthor(@RequestBody Author author, @PathVariable String id){
         return authorService.updateAuthor(id, author);

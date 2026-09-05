@@ -36,7 +36,7 @@ public class CategoryController {
         return categoryService.createCategories(category);
     }
 
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public CategoryResponseDTO updateCategory(@RequestBody CategoryRequestDTO category, @PathVariable String id){
         return categoryService.updateCategory(id, category);

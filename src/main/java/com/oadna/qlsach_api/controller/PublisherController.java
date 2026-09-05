@@ -43,6 +43,7 @@ public class PublisherController {
         return publisherService.createPublishers(publisherRequests);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public PublisherResponseDTO updatePublisher(@RequestBody PublisherRequestDTO publisher, @PathVariable String id){
         return publisherService.updatePublisher(id, publisher);
