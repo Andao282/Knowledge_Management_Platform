@@ -5,8 +5,15 @@ import com.oadna.qlsach_api.entity.*;
 import com.oadna.qlsach_api.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -144,21 +151,20 @@ public class BorrowService {
         return "Đã ghi nhận phiếu mượn " + requestDTO.getBorrowID() + " được hoàn trả 1 phần!";
     }
 
-    public List<BorrowResponseDTO> getAllBorrowSlips(){
-        List<BorrowSlips> listSlips = borrowSlipsRepository.findAll();
+    public Page<BorrowResponseDTO> getAllBorrowSlips(int pageNo, int pageSize, String sortBy){
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
 
-        return listSlips.stream().map(slip -> {
+       Page<BorrowSlips> pageSlips = borrowSlipsRepository.findAll(pageable);
+        return pageSlips.map(slip -> {
             BorrowResponseDTO dto = new BorrowResponseDTO();
             dto.setBorrowID(slip.getBorrowID());
             dto.setStaffID(slip.getStaffID().getStaffID());
             dto.setReaderID(slip.getReaderID().getReaderID());
-
             dto.setBorrowDate(slip.getBorrowDate());
             dto.setDueDate(slip.getDueDate());
             dto.setReturned(slip.getReturned());
-
             return dto;
-        }).toList();
+        });
     }
 
     public BorrowSlipDetailResponseDTO getBorrowSlipByID(String borrowID){

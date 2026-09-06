@@ -8,6 +8,7 @@ import com.oadna.qlsach_api.entity.BorrowSlips;
 import com.oadna.qlsach_api.service.BorrowService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,12 @@ public class BorrowController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BorrowResponseDTO>> getAllBorrowSlips(){
-        List<BorrowResponseDTO> slipsList = borrowService.getAllBorrowSlips();
-        return new ResponseEntity<>(slipsList, HttpStatus.OK);
+    public Page<BorrowResponseDTO> getAllBorrowSlips(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "borrowDate") String sortBy)
+    {
+        return borrowService.getAllBorrowSlips(page, size, sortBy);
     }
 
     @GetMapping("/{borrowID}")
