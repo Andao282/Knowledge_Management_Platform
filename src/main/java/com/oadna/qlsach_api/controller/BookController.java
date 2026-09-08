@@ -23,16 +23,19 @@ public class BookController {
         return bookService.getAllBooks();
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public BookResponseDTO createBook(@Valid @RequestBody BookRequestDTO books){
         return bookService.addBook(books);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/multiple-books")
     public List<BookResponseDTO> createBooks(@Valid @RequestBody List<BookRequestDTO> books){
         return bookService.addBooks(books);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public BookResponseDTO updateBook(@PathVariable String id, @Valid @RequestBody BookRequestDTO bookDetails){
         return bookService.updateBook(id, bookDetails);
