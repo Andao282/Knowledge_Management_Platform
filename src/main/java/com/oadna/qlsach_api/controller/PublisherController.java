@@ -32,12 +32,12 @@ public class PublisherController {
     public List<PublisherResponseDTO> findPublisherByName(@RequestParam String name){
         return publisherService.findPublisherByPublisherName(name);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public PublisherResponseDTO createPublisher(@RequestBody PublisherRequestDTO publisher){
         return publisherService.createPublisher(publisher);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/multiple-publishers")
     public List<PublisherResponseDTO> createPublishers(@RequestBody List<PublisherRequestDTO> publisherRequests){
         return publisherService.createPublishers(publisherRequests);
