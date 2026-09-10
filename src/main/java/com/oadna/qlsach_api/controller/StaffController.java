@@ -24,11 +24,12 @@ public class StaffController {
         return staffService.getAllStaffs();
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public StaffResponseDTO createStaff(@Valid @RequestBody StaffRequestDTO staff){
         return staffService.createStaff(staff);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/multiple-staffs")
     public List<StaffResponseDTO> createMultipleStaffs(@RequestBody List<StaffRequestDTO> staff){
         return staffService.createStaffs(staff);

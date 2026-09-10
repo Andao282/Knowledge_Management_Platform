@@ -28,11 +28,13 @@ public class ReaderController {
         return readerService.getReader(id);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ReaderResponseDTO createReader(@Valid @RequestBody ReaderRequestDTO reader){
         return readerService.createReader(reader);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/multiple-readers")
     public List<ReaderResponseDTO> createReaders(@Valid @RequestBody List<ReaderRequestDTO> readers){
         return readerService.createReaders(readers);
