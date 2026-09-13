@@ -26,6 +26,7 @@ public class CategoryController {
         return categoryService.findById(id);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public CategoryResponseDTO createCategory(@RequestBody CategoryRequestDTO category){
         return categoryService.createCategory(category);
