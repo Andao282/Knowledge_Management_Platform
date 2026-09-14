@@ -32,6 +32,7 @@ public class CategoryController {
         return categoryService.createCategory(category);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/multiple-categories")
     public List<CategoryResponseDTO> createMultipleCategories(@RequestBody List<CategoryRequestDTO> category){
         return categoryService.createCategories(category);
