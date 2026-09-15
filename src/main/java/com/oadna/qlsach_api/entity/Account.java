@@ -30,6 +30,6 @@ public class Account {
     @Column(name = "Role", length = 50)
     private String role;
 
-    @Column(name = "Note")
+    @Column(name = "Note", length = 255)
     private String note;
 }
