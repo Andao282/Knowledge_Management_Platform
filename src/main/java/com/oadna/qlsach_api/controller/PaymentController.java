@@ -38,7 +38,7 @@ public class PaymentController {
         vnp_Params.put("vnp_Version", "2.1.0");
         vnp_Params.put("vnp_Command", "pay");
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amountVNPay));=
+        vnp_Params.put("vnp_Amount", String.valueOf(amountVNPay));
         vnp_Params.put("vnp_CurrCode", "VND");
 
         // Mã giao dịch (Phải là duy nhất nên anh nối thêm timestamp hiện tại)

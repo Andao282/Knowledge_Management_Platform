@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth
                         -> auth.requestMatchers("/Knowledge_Management_Platform/accounts/create").permitAll()
                                .requestMatchers("/Knowledge_Management_Platform/accounts/login").permitAll()
+                        .requestMatchers("/api/payment/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
