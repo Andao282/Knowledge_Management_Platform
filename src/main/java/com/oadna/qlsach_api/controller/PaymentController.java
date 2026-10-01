@@ -1,12 +1,16 @@
 package com.oadna.qlsach_api.controller;
 
 import com.oadna.qlsach_api.config.VNPayConfig;
+import com.oadna.qlsach_api.entity.FineSlips;
+import com.oadna.qlsach_api.repository.FineSlipsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -15,6 +19,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
+
+    @Autowired
+    private FineSlipsRepository  fineSlipsRepository;
 
     // Kéo các cấu hình từ application.properties lên đây
     @Value("${vnpay.tmnCode}")
@@ -82,5 +89,56 @@ public class PaymentController {
         query.append("&vnp_SecureHash=").append(vnp_SecureHash);
 
         return vnp_PayUrl + "?" + query.toString();
+    }
+
+    @GetMapping("/vnpay-callback")
+    public String paymentCallback(@RequestParam Map<String, String> queryParams){
+        String vnp_SecureHash = queryParams.get("vnp_SecureHash");
+
+        queryParams.remove("vnp_SecureHashType");
+        queryParams.remove("vnp_SecureHash");
+
+        List<String> fieldNames = new ArrayList<>(queryParams.keySet());
+        Collections.sort(fieldNames);
+        StringBuilder hashData = new StringBuilder();
+        Iterator<String> itr = fieldNames.iterator();
+
+        try{
+            while(itr.hasNext()){
+                String fieldName = itr.next();
+                String fieldValue = queryParams.get(fieldName);
+                if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                    hashData.append(fieldName).append('=').append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()).replace("+", "%20"));
+                    if(itr.hasNext()){
+                        hashData.append('&');
+                    }
+                }
+            }
+        }catch(Exception e){
+            return "Lỗi mã hóa dữ liệu!";
+        }
+
+        String signValue = VNPayConfig.hmacSHA512(vnp_HashSecret, hashData.toString());
+        if(signValue.equals(vnp_SecureHash)){
+            String responseCode =  queryParams.get("responseCode");
+            if ("00".equals(responseCode)){
+                String txnRef = queryParams.get("vnp_TxnRef");
+                String fineId = txnRef.split("_")[0];
+
+                FineSlips slip = fineSlipsRepository.findById(fineId).orElse(null);
+
+                if(slip != null){
+                    slip.setIsPaid(true);
+                    fineSlipsRepository.save(slip);
+                    return "Giao dịch THÀNH CÔNG! Đã gạch nợ cho phiếu phạt: " + fineId;
+                }else {
+                    return "Giao dịch thành công nhưng không tìm thấy phiếu phạt trong Database!";
+                }
+            }else{
+                return "Giao dịch THẤT BẠI! Mã lỗi VNPay: " + responseCode;
+            }
+        }else{
+            return "CẢNH BÁO: Chữ ký không hợp lệ! Phát hiện nghi vấn giả mạo dữ liệu.";
+        }
     }
 }
