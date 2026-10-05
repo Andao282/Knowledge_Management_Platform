@@ -28,6 +28,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
+        String path = request.getServletPath();
+        String requestURI = request.getRequestURI();
+
+        // Kiểm tra xem URI có chứa các từ khóa của Swagger hoặc VNPay không
+        if (requestURI.contains("/v3/api-docs") ||
+                requestURI.contains("/swagger-ui") ||
+                requestURI.contains("/swagger-resources") ||
+                requestURI.contains("/api/payment")) {
+
+            // Cho qua thẳng, không cần xét Token
+            filterChain.doFilter(request, response);
+            return;
+        }
         if(authHeader != null && authHeader.startsWith("Bearer ") ){
             token = authHeader.substring(7);
             try{

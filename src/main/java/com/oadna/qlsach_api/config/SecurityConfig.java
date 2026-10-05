@@ -29,7 +29,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth
                         -> auth.requestMatchers("/Knowledge_Management_Platform/accounts/create").permitAll()
                                .requestMatchers("/Knowledge_Management_Platform/accounts/login").permitAll()
-                        .requestMatchers("/api/payment/**").permitAll()
+                               .requestMatchers("/api/payment/**").permitAll()
+                               .requestMatchers("/v3/api-docs",
+                                                         "/v3/api-docs/**",
+                                                         "/swagger-ui/**",
+                                                         "/swagger-ui.html",
+                                                         "/webjars/**",
+                                                         "/api/auth/**",
+                                                         "/api/payment/**").permitAll()
                         .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
