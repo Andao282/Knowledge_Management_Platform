@@ -1,12 +1,11 @@
 package com.oadna.qlsach_api.controller;
 
 import com.oadna.qlsach_api.dto.AccountRequestDTO;
+import com.oadna.qlsach_api.dto.LoginRequest;
 import com.oadna.qlsach_api.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -29,11 +28,11 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> request) {
-        String username = request.get("username");
-        String password = request.get("password");
+    public ResponseEntity<?> login(@RequestBody LoginRequest login) {
+        String username = login.getUsername();
+        String password = login.getPassword();
 
         String token = accountService.login(username, password);
-        return token;
+        return ResponseEntity.ok(token);
     }
 }
