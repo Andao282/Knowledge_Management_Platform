@@ -105,7 +105,7 @@ public class BorrowService {
             double fineAmount = 0.0;
             StringBuilder fineReason = new StringBuilder();
 
-            long daysLate = java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), detail.getExpectedReturnDate());
+            long daysLate = java.time.temporal.ChronoUnit.DAYS.between(detail.getExpectedReturnDate(), LocalDate.now());
             if(daysLate > 0){
                 fineAmount += daysLate * 5000;
                 fineReason.append("Trễ hạn ").append(daysLate).append(" ngày.");
