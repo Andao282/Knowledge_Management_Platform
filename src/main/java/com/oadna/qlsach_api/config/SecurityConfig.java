@@ -27,8 +27,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth
-                        -> auth.requestMatchers("/Knowledge_Management_Platform/accounts/create").permitAll()
-                               .requestMatchers("/Knowledge_Management_Platform/accounts/login").permitAll()
+                        -> auth.requestMatchers("/Knowledge_Management_Platform/accounts/login").permitAll()
                                .requestMatchers("/api/payment/**").permitAll()
                                .requestMatchers("/v3/api-docs",
                                                          "/v3/api-docs/**",
