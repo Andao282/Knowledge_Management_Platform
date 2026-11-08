@@ -5,6 +5,7 @@ import com.oadna.qlsach_api.dto.LoginRequest;
 import com.oadna.qlsach_api.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,6 +16,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/create")
     public String createAccount(@RequestBody AccountRequestDTO account) {
          accountService.createAccount(
